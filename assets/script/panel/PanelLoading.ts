@@ -1,5 +1,5 @@
 import { FAnima } from "../framework/FAnima";
-import { fm_panel_config, FPanelExtends } from "../framework/FPanel";
+import { FPanel } from "../framework/FPanel";
 import { FText } from "../framework/FText";
 import { FVersion } from "../framework/FVersion";
 
@@ -13,22 +13,15 @@ const C = {
  */
 @ccclass
 @menu("panel/PanelLoading")
-@fm_panel_config("PanelLoading", "single")
-export class PanelLoading extends FPanelExtends {
+@FPanel.config_panel("PanelLoading")
+export class PanelLoading extends FPanel.FPanelTemplate {
 
     async on_open() {
-        this.label_game_info.string = FText.get("panel_loading_game_info",
-            FVersion.get_name(),
-            FVersion.get_creator(),
-            FVersion.get_version_number(),
-            FVersion.get_version_time())
-        await FAnima.in_fade_move(this.node, { direction: "down", time: C.FADE_TIME })
+        FPanel.set_ui_state_data(this.node, { opacity: 255 }, { opacity: 0 })
+        await FPanel.in_ui(this.node, { time: 1 })
     }
 
     async on_close() {
-        await FAnima.out_fade_move(this.node, { direction: "up", time: C.FADE_TIME })
+        await FPanel.out_ui(this.node, { time: 1 })
     }
-
-    @property(cc.Label)
-    private label_game_info: cc.Label = null
 }
